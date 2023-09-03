@@ -1,15 +1,19 @@
-use cortex_m_semihosting::hprintln;
+use rtt_target::{rprintln, set_print_channel, UpChannel};
 
-pub struct SemihostingLogger;
+use panic_rtt_target as _;
 
-static MY_LOGGER: SemihostingLogger = SemihostingLogger;
+struct RTTLogger;
+static RTT_LOGGER: RTTLogger = RTTLogger;
 
-pub fn init() {
-    log::set_logger(&MY_LOGGER).unwrap();
+pub fn init(channel: UpChannel) {
+    set_print_channel(channel);
+
+    log::set_logger(&RTT_LOGGER).unwrap();
     log::set_max_level(log::LevelFilter::Trace);
+    rprintln!("\r\n");
 }
 
-impl log::Log for SemihostingLogger {
+impl log::Log for RTTLogger {
     fn enabled(&self, _metadata: &log::Metadata) -> bool {
         true
     }
@@ -19,13 +23,12 @@ impl log::Log for SemihostingLogger {
             return;
         }
 
-        hprintln!(
-            "<{}>\t{}:  {}",
+        rprintln!(
+            "<{}> {}\r",
             record.level(),
-            record.target(),
+            // record.target(),
             record.args()
         )
-        .unwrap();
     }
     fn flush(&self) {}
 }

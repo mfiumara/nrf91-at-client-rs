@@ -5,30 +5,26 @@ readme = "README.md"
 name = "rs-rtos"
 version = "0.1.0"
 
-[dependencies.async-std]
-version = "1.7.0"
-default-features = false
-features = ["alloc"]
-# async-std = { version = "1.12.0", default-features = false }
-
-[dependencies.futures-lite]
-version = "1.13.0"
-default-features = false
-features = ["alloc"]
-
 [dependencies]
 log = { version = "0.4.20", default-features = false }
 
 # Uncomment for the panic example.
 # panic-itm = "0.4.1"
-panic-halt = "0.2.0"
 
 # Uncomment for the allocator example.
-cortex-m = "0.6.0"
+cortex-m = { version = "0.7.7", features = ["critical-section-single-core"] }
 cortex-m-rt = "0.6.10"
-cortex-m-semihosting = "0.3.3"
 alloc-cortex-m = "0.4.0"
 rtt-target = "0.4.0"
+embassy-executor = { version = "0.3.0", features = ["arch-cortex-m", "executor-interrupt", "executor-thread", "nightly"] }
+critical-section = "1.1.2"
+nrf-modem = "0.3.3"
+nrfxlib-sys = { version = "2.1.0", features = ["arm-none-eabi-objcopy"] }
+tinyrlibc = { version = "0.3.0" }
+embassy-nrf = { git = "https://github.com/embassy-rs/embassy.git", version = "0.1.0", features= ["nrf9160-ns"]}
+nrf9160-hal = "0.16.0"
+panic-rtt-target = { version = "0.1.2", features = ["cortex-m"] }
+defmt = "0.3.5"
 
 # Uncomment for the device example.
 # Update `memory.x`, set target to `thumbv7em-none-eabihf` in `.cargo/config`,
