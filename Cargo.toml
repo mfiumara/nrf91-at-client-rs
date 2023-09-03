@@ -2,40 +2,36 @@
 authors = ["Mattia Fiumara <mfiumara@protonmail.com>"]
 edition = "2018"
 readme = "README.md"
-name = "rs-rtos"
+name = "nrf91-at-client-rs"
 version = "0.1.0"
 
 [dependencies]
-log = { version = "0.4.20", default-features = false }
-
-# Uncomment for the panic example.
-# panic-itm = "0.4.1"
-
-# Uncomment for the allocator example.
+# Definitions used for our run-time and allocator
 cortex-m = { version = "0.7.7", features = ["critical-section-single-core"] }
 cortex-m-rt = "0.6.10"
 alloc-cortex-m = "0.4.0"
-rtt-target = "0.4.0"
+# embassy async-run-time
 embassy-executor = { version = "0.3.0", features = ["arch-cortex-m", "executor-interrupt", "executor-thread", "nightly"] }
+
+# Logging related packages, should investigate if we can use defmt in stead
+log = { version = "0.4.20", default-features = false }
+rtt-target = "0.4.0"
+panic-rtt-target = { version = "0.1.2", features = ["cortex-m"] }
+# Needed by rtt-target to provide thread-safe access to logging instance
 critical-section = "1.1.2"
+
+# Needed to talk to the nrf91 modem
 nrf-modem = "0.3.3"
 nrfxlib-sys = { version = "2.1.0", features = ["arm-none-eabi-objcopy"] }
 tinyrlibc = { version = "0.3.0" }
+
+# HAL provided by Embassy
 embassy-nrf = { git = "https://github.com/embassy-rs/embassy.git", version = "0.1.0", features= ["nrf9160-ns"]}
+# HAL that should not be required since we use embassy-nrf
 nrf9160-hal = "0.16.0"
-panic-rtt-target = { version = "0.1.2", features = ["cortex-m"] }
-defmt = "0.3.5"
 
-# Uncomment for the device example.
-# Update `memory.x`, set target to `thumbv7em-none-eabihf` in `.cargo/config`,
-# and then use `cargo build --examples device` to build it.
-# [dependencies.stm32f3]
-# features = ["stm32f303", "rt"]
-# version = "0.7.1"
-
-# this lets you use `cargo fix`!
 [[bin]]
-name = "rs-rtos"
+name = "nrf91-at-client-rs"
 test = false
 bench = false
 
