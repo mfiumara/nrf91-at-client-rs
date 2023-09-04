@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install dependencies
-      run: sudo apt-get install binutils-arm-none-eabi
+      run: sudo apt-get install binutils-arm-none-eabi gcc-arm-none-eabi
     - name: Build
       run: cargo build --verbose
     - name: Run tests
