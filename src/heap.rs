@@ -1,15 +1,27 @@
-extern crate alloc;
+use core::{
+    mem::MaybeUninit,
+    sync::atomic::{AtomicBool, Ordering},
+};
 
-use alloc_cortex_m::CortexMHeap;
+use embedded_alloc::Heap;
 
-// this is the allocator the application will use
+const HEAP_SIZE: usize = 8192;
+
 #[global_allocator]
-static ALLOCATOR: CortexMHeap = CortexMHeap::empty();
+static HEAP: Heap = Heap::empty();
 
-const HEAP_SIZE: usize = 1024; // in bytes
+static mut HEAP_MEM: [MaybeUninit<u8>; HEAP_SIZE] = [MaybeUninit::uninit(); HEAP_SIZE];
 
 pub fn init() {
-    // Initialize the allocator BEFORE you use it
-    unsafe { ALLOCATOR.init(cortex_m_rt::heap_start() as usize, HEAP_SIZE) }
+    static ONCE: AtomicBool = AtomicBool::new(false);
+
+    // Don't allow init() to be called more than once
+    if ONCE
+        .compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst)
+        .is_ok()
+    {
+        unsafe {
+            HEAP.init(HEAP_MEM.as_ptr() as usize, HEAP_SIZE);
+        }
+    }
 }
-// https://github.com/rust-embedded/embedded-alloc
