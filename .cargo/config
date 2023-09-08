@@ -9,7 +9,7 @@ runner = "qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -semiho
 # runner = "gdb-multiarch -q -x openocd.gdb"
 # runner = "gdb -q -x openocd.gdb"
 
-rustflags = [
+# rustflags = [
   # Previously, the linker arguments --nmagic and -Tlink.x were set here.
   # They are now set by build.rs instead. The linker argument can still
   # only be set here, if a custom linker is needed.
@@ -24,7 +24,11 @@ rustflags = [
   # "-C", "linker=arm-none-eabi-gcc",
   # "-C", "link-arg=-Wl,-Tlink.x",
   # "-C", "link-arg=-nostartfiles",
-]
+# ]
+
+[env]
+# `cargo clean -p defmt` after you change this
+DEFMT_LOG = "trace"
 
 [build]
 # Pick ONE of these default compilation targets
